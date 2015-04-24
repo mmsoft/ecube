@@ -1,0 +1,48 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">厂家信息维护</h3>
+  </div>
+  <div class="panel-body">
+    <form id="newCustomerForm" role="form">
+      <div class="form-group col-md-6">
+        <label for="name">厂家名称</label>
+        <input type="text" class="form-control" id="name" ng-model="company.name" placeholder="" required>
+        <div class="help-block with-errors"></div>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="plan">采集器目标安装数</label>
+        <input type="number" class="form-control" id="plan" ng-model="company.planned"
+               placeholder="" required>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="installed">采集器实际安装数</label>
+        <input type="number" class="form-control" id="installed" ng-model="company.installed"
+               placeholder="">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="address">详细地址</label>
+        <textarea type="text" class="form-control" id="address" ng-model="company.address" placeholder=""></textarea>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="contact">用户负责人</label>
+        <input type="text" class="form-control" id="contact" ng-model="company.contact" placeholder="">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="phone">联系电话</label>
+        <input type="tel" class="form-control" id="phone" ng-model="company.phone" placeholder="">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="zip">邮编</label>
+        <input type="text" class="form-control" id="zip" ng-model="company.zip" placeholder="">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="email">电子邮箱</label>
+        <input type="email" class="form-control" id="email" ng-model="company.email" placeholder="">
+      </div>
+
+      <button type="submit" class="btn btn-primary" ng-click='save()'>保存并关闭</button>
+      <button class="btn btn-default" ng-click='cancel()'>取消并关闭</button>
+    </form>
+  </div>
+</div>
