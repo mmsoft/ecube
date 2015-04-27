@@ -8,7 +8,7 @@
  * Controller of the yoAngularApp
  */
 angular.module('yoAngularApp')
-  .controller('MainCtrl', function ($scope, Restangular, uuid2, ngDialog, dialogs) {
+  .controller('MainCtrl', function ($scope, $timeout, Restangular, $modal, dialogs) {
 
     $scope.gridOpts = {
       columnDefs: [
@@ -17,20 +17,25 @@ angular.module('yoAngularApp')
           field: 'id',
           width: 200,
           pinnedRight: true,
-          cellTemplate: ' <button type="button" class="btn btn-primary" ng-click="grid.appScope.edit(row.entity.id)">编辑</button> <button type="button" class="btn btn-danger" ng-click="grid.appScope.toRemove(row.entity.id, row.entity.name)">删除</button>'
+          enableColumnMenu: false,
+          cellTemplate: '  <button type="button" class="btn btn-primary" ng-click="grid.appScope.edit(row.entity.id)">编辑</button><button type="button" class="btn btn-danger" ng-click="grid.appScope.toRemove(row.entity.id, row.entity.name)">删除</button>'
         },
         {
-          name: '厂家名称', field: 'name', width: 150
+          name: '厂家名称',
+          field: 'name',
+          width: 150,
+          enableHiding: false,
+          enablePinning: false
         },
-        {name: '采集器目标安装数', field: 'planned', width: 150},
-        {name: '采集器实际安装数', field: 'installed', width: 150},
+        {name: '目标安装', field: 'planned', width: 100, enableHiding: false, enablePinning: false},
+        {name: '实际安装', field: 'installed', width: 100, enableHiding: false, enablePinning: false},
         {
-          name: '详细地址', field: 'address', width: 500
+          name: '详细地址', field: 'address', width: 150, enableHiding: false, enablePinning: false
         },
-        {name: '邮编', field: 'zip', width: 100},
-        {name: '负责人', field: 'contact', width: 100},
-        {name: '电话', field: 'phone', width: 200},
-        {name: '邮箱', field: 'email', width: 200}
+        {name: '邮编', field: 'zip', width: 100, enableHiding: false, enablePinning: false},
+        {name: '负责人', field: 'contact', width: 100, enableHiding: false, enablePinning: false},
+        {name: '电话', field: 'phone', width: 150, enableHiding: false, enablePinning: false},
+        {name: '邮箱', field: 'email', width: 150, enableHiding: false, enablePinning: false}
       ],
       data: []
     };
@@ -43,13 +48,10 @@ angular.module('yoAngularApp')
     $scope.company = {};
     $scope.add = function () {
 
-      ngDialog.open({
-        template: 'views/new.html',
-        className: 'ngdialog-theme-default newTaskDialog',
-        scope: $scope,
-        preCloseCallback: function (customer) {
-
-        }
+      $scope.addModal = $modal.open({
+        templateUrl: 'views/new.html',
+        windowClass: 'editDialog',
+        scope: $scope
       });
     };
 
@@ -59,34 +61,37 @@ angular.module('yoAngularApp')
       });
       if (company !== null) {
         $scope.company = company;
-        ngDialog.open({
-          template: 'views/new.html',
-          className: 'ngdialog-theme-default newTaskDialog',
-          scope: $scope,
-          preCloseCallback: function (customer) {
-
-          }
+        $scope.editModal = $modal.open({
+          templateUrl: 'views/new.html',
+          windowClass: 'editDialog',
+          scope: $scope
         });
+
       }
     };
 
     $scope.save = function () {
-      $('#newCustomerForm').validator();
+
       if ($scope.company.id) {
         $scope.company.put().then(function () {
-          ngDialog.closeAll();
+          $scope.cancel();
         });
       }
       else {
         companies.post($scope.company).then(function (company) {
           $scope.gridOpts.data.push(company);
-          ngDialog.closeAll();
+          $scope.cancel();
         });
       }
     };
 
+
     $scope.cancel = function () {
-      ngDialog.closeAll();
+      if ($scope.addModal)
+        $scope.addModal.close();
+
+      if ($scope.editModal)
+        $scope.editModal.close();
     };
 
     $scope.toRemove = function (id, name) {

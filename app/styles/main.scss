@@ -102,6 +102,13 @@ body {
   width: 100%;
 }
 
-.ngdialog.ngdialog-theme-default.newTaskDialog .ngdialog-content {
+.editDialog .modal-dialog {
   width: 700px;
+
+  .panel {
+    margin-bottom: 0;
+  }
 }
+
+/* angular-validation
+   Sass does not support extending nested selector, so... */

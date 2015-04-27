@@ -20,12 +20,14 @@ angular
     'restangular',
     'ui.grid',
     'ui.grid.pinning',
+    'ui.grid.resizeColumns',
     'angularUUID2',
-    'ngDialog',
     'ui.bootstrap',
-    'dialogs.main'
+    'dialogs.main',
+    'pascalprecht.translate',
+    'validation', 'validation.rule'
   ])
-  .config(function ($routeProvider, $translateProvider, RestangularProvider) {
+  .config(function ($routeProvider, $translateProvider, RestangularProvider, $validationProvider) {
 
     $routeProvider
       .when('/', {
@@ -40,10 +42,29 @@ angular
         redirectTo: '/'
       });
 
-    $translateProvider.translations('zh-CN',{
+    $translateProvider.translations('zh-CN', {
 
       DIALOGS_YES: "好",
       DIALOGS_NO: "不"
+    }).preferredLanguage('zh-CN');
+
+    $validationProvider.setErrorHTML(function (msg) {
+      return "<label class=\"control-label has-error\">" + msg + "</label>";
+    });
+
+    angular.extend($validationProvider, {
+      validCallback: function (element) {
+        $(element).parents('.form-group:first').removeClass('has-error');
+      },
+      invalidCallback: function (element) {
+        $(element).parents('.form-group:first').addClass('has-error');
+      }
+    });
+
+    $validationProvider.setDefaultMsg({
+      required: {
+        error: "* 必填", success: ""
+      }
     });
 
     RestangularProvider.setBaseUrl('http://localhost:55170/api');
